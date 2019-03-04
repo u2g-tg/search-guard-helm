@@ -44,6 +44,10 @@ spec:
         fsGroup: 1000
       {{- if eq .Values.data.antiAffinity "hard" }}
       affinity:
+{{- with .Values.data.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - topologyKey: "kubernetes.io/hostname"
@@ -61,6 +65,10 @@ spec:
                   role: data
       {{- else if eq .Values.data.antiAffinity "soft" }}
       affinity:
+{{- with .Values.data.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
@@ -78,6 +86,10 @@ spec:
                   component: {{ template "fullname" . }}
                   role: data
       {{- end }}
+{{- with .Values.data.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       initContainers:
 {{ include "init-containers" . | indent 6 }}
       containers:

@@ -42,6 +42,10 @@ spec:
         fsGroup: 1000
       {{- if eq .Values.client.antiAffinity "hard" }}
       affinity:
+{{- with .Values.client.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
@@ -59,6 +63,10 @@ spec:
                   role: client
       {{- else if eq .Values.client.antiAffinity "soft" }}
       affinity:
+{{- with .Values.client.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
@@ -76,6 +84,10 @@ spec:
                   component: {{ template "fullname" . }}
                   role: client
       {{- end }}
+{{- with .Values.client.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       initContainers:
 {{ include "init-containers" . | indent 6 }}
       containers:

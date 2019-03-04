@@ -41,6 +41,10 @@ spec:
         fsGroup: 1000
       {{- if eq .Values.kibana.antiAffinity "hard" }}
       affinity:
+{{- with .Values.kibana.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - topologyKey: "failure-domain.beta.kubernetes.io/zone"
@@ -58,6 +62,10 @@ spec:
                   role: kibana
       {{- else if eq .Values.kibana.antiAffinity "soft" }}
       affinity:
+{{- with .Values.kibana.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
@@ -75,6 +83,10 @@ spec:
                   component: {{ template "fullname" . }}
                   role: kibana
       {{- end }}
+{{- with .Values.kibana.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       initContainers:
         - name: kibana-init
           image: "floragunncom/sg-sgadmin:{{ .Values.common.elkversion }}-{{ .Values.common.sgversion }}"

@@ -44,6 +44,10 @@ spec:
         fsGroup: 1000
       {{- if eq .Values.master.antiAffinity "hard" }}
       affinity:
+{{- with .Values.master.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - topologyKey: "failure-domain.beta.kubernetes.io/zone"
@@ -61,6 +65,10 @@ spec:
                   role: master
       {{- else if eq .Values.master.antiAffinity "soft" }}
       affinity:
+{{- with .Values.master.affinity.nodeAffinity }}
+        nodeAffinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
@@ -78,6 +86,10 @@ spec:
                   component: {{ template "fullname" . }}
                   role: master
       {{- end }}
+{{- with .Values.master.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       initContainers:
 {{ include "init-containers" . | indent 6 }}
       containers:
