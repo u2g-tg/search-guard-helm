@@ -41,7 +41,7 @@ spec:
         fsGroup: 1000
       {{- if eq .Values.kibana.antiAffinity "hard" }}
       affinity:
-{{- with .Values.kibana.affinity.nodeAffinity }}
+{{- with .Values.kibana.nodeAffinity }}
         nodeAffinity:
 {{ toYaml . | indent 10 }}
 {{- end }}
@@ -62,7 +62,7 @@ spec:
                   role: kibana
       {{- else if eq .Values.kibana.antiAffinity "soft" }}
       affinity:
-{{- with .Values.kibana.affinity.nodeAffinity }}
+{{- with .Values.kibana.nodeAffinity }}
         nodeAffinity:
 {{ toYaml . | indent 10 }}
 {{- end }}
